@@ -1,5 +1,6 @@
 package org.tylproject.vaadin.mltext;
 
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.Window;
 import org.tylproject.data.mongo.common.MlText;
 
@@ -14,9 +15,16 @@ public class MultiLangWindow extends Window {
         this.multiLangEditor = multiLangEditor;
         this.owner = owner;
         setContent(multiLangEditor);
-        center();
+//        center();
         setModal(true);
         setResizable(false);
+        setCloseShortcut(ShortcutAction.KeyCode.ESCAPE);
+    }
+
+    @Override
+    public void focus() {
+        super.focus();
+        this.multiLangEditor.focus();
     }
 
     @Override

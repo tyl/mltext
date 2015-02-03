@@ -1,5 +1,6 @@
 package org.tylproject.vaadin.mltext;
 
+import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
@@ -7,6 +8,8 @@ import com.vaadin.ui.TextField;
 import org.tylproject.data.mongo.common.LangKey;
 import org.tylproject.data.mongo.common.MlText;
 
+import java.net.URL;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -18,7 +21,6 @@ public class MultiLangEditor extends FormLayout {
     MlText source = new MlText();
 
     public MultiLangEditor() {
-
         for (LangKey k: LangKey.values()) {
             TextField f = new TextField(k.name());
             fieldMap.put(k, f);
@@ -43,5 +45,12 @@ public class MultiLangEditor extends FormLayout {
             source.setText(e.getKey(), e.getValue().getValue());
         }
         return source;
+    }
+
+    @Override
+    public void focus() {
+        super.focus();
+        Iterator<AbstractTextField> iter = fieldMap.values().iterator();
+        if (iter.hasNext()) iter.next().focus();
     }
 }

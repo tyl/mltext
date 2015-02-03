@@ -23,6 +23,7 @@ public class MultiLangTextField extends CombinedField<MlText, String, TextField>
             public void buttonClick(Button.ClickEvent event) {
                 multiLangWindow.getEditor().setMultiLangText(getValue());
                 UI.getCurrent().addWindow(multiLangWindow);
+                multiLangWindow.getEditor().focus();
             }
         });
     }
