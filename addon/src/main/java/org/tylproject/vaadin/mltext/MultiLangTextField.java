@@ -4,6 +4,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import org.tylproject.data.mongo.common.LangKey;
 import org.tylproject.data.mongo.common.MlText;
 import org.tylproject.data.mongo.config.TylContext;
 import org.tylproject.vaadin.addon.fields.CombinedField;
@@ -13,9 +14,14 @@ import org.tylproject.vaadin.addon.fields.CombinedField;
  */
 public class MultiLangTextField extends CombinedField<MlText, String, TextField> {
     MlText value = new MlText();
-    final MultiLangEditor multiLangEditor = new MultiLangEditor();
-    public MultiLangTextField() {
+    final LangKey currentLanguage;
+    final MultiLangEditor multiLangEditor;
+
+    public MultiLangTextField(final LangKey currentLanguage) {
         super(new TextField(), new Button(FontAwesome.FLAG), MlText.class);
+        this.currentLanguage = currentLanguage;
+        this.multiLangEditor = new MultiLangEditor();
+
         final MultiLangWindow multiLangWindow = new MultiLangWindow(multiLangEditor, this);
 
         getButton().addClickListener(new Button.ClickListener() {
@@ -31,13 +37,13 @@ public class MultiLangTextField extends CombinedField<MlText, String, TextField>
     @Override
     public void setValue(MlText newValue) throws ReadOnlyException {
         this.value = newValue;
-        getBackingField().setValue(newValue.getText());
+        getBackingField().setValue(newValue.getText(currentLanguage));
     }
 
     @Override
     public MlText getValue() {
         String text = getBackingField().getValue();
-        value.setText(TylContext.currentLanguage(), text);
+        value.setText(this.currentLanguage, text);
         return value;
     }
 }

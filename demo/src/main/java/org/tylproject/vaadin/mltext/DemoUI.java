@@ -16,9 +16,11 @@ import static org.tylproject.data.mongo.common.LangKey.*;
 @VaadinUI
 @Theme("valo")
 public class DemoUI extends UI {
+
+    final LangKey currentLanguage = en;
+
     @Override
     protected void init(VaadinRequest request) {
-        TylContext.setCurrentLanguage(it);
 
         final MlText mlText = new MlText();
 
@@ -28,7 +30,9 @@ public class DemoUI extends UI {
         mlText.setText(es, "Hola Mundo");
         mlText.setText(de, "Hallo Welt");
 
-        final MultiLangTextField multiLangTextField = new MultiLangTextField();
+        final MultiLangTextField multiLangTextField = new MultiLangTextField(currentLanguage);
+
+
         multiLangTextField.setValue(mlText);
         VerticalLayout vl = new VerticalLayout(multiLangTextField);
         vl.setMargin(true);
