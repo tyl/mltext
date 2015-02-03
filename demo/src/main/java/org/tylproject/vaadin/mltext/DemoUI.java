@@ -22,6 +22,24 @@ public class DemoUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
 
+        final MlText mlText1 = makeText();
+        final MlText mlText2 = makeText();
+
+        final MultiLangTextField multiLangTextField = new MultiLangTextField(currentLanguage);
+        multiLangTextField.setValue(mlText1);
+
+        final MultiLangTextArea multiLangTextArea = new MultiLangTextArea(currentLanguage);
+        multiLangTextArea.setValue(mlText2);
+
+
+
+        VerticalLayout vl = new VerticalLayout(multiLangTextField, multiLangTextArea);
+        vl.setMargin(true);
+        setContent(vl);
+
+    }
+
+    private MlText makeText() {
         final MlText mlText = new MlText();
 
         mlText.setText(it, "Ciao Mondo");
@@ -29,14 +47,6 @@ public class DemoUI extends UI {
         mlText.setText(fr, "Salut à tous le Monde");
         mlText.setText(es, "Hola Mundo");
         mlText.setText(de, "Hallo Welt");
-
-        final MultiLangTextField multiLangTextField = new MultiLangTextField(currentLanguage);
-
-
-        multiLangTextField.setValue(mlText);
-        VerticalLayout vl = new VerticalLayout(multiLangTextField);
-        vl.setMargin(true);
-        setContent(vl);
-
+        return mlText;
     }
 }

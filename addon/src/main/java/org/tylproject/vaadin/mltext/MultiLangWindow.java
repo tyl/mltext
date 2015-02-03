@@ -9,9 +9,9 @@ import org.tylproject.data.mongo.common.MlText;
  */
 public class MultiLangWindow extends Window {
     final MultiLangEditor multiLangEditor;
-    final MultiLangTextField owner;
+    final AbstractMultiLangTextField owner;
 
-    public MultiLangWindow(MultiLangEditor multiLangEditor, MultiLangTextField owner) {
+    public MultiLangWindow(MultiLangEditor multiLangEditor, AbstractMultiLangTextField owner) {
         this.multiLangEditor = multiLangEditor;
         this.owner = owner;
         setContent(multiLangEditor);

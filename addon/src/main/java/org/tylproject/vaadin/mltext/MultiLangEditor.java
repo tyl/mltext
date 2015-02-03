@@ -1,10 +1,7 @@
 package org.tylproject.vaadin.mltext;
 
 import com.vaadin.server.ExternalResource;
-import com.vaadin.ui.AbstractTextField;
-import com.vaadin.ui.Field;
-import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.*;
 import org.tylproject.data.mongo.common.LangKey;
 import org.tylproject.data.mongo.common.MlText;
 
@@ -22,7 +19,7 @@ public class MultiLangEditor extends FormLayout {
 
     public MultiLangEditor() {
         for (LangKey k: LangKey.values()) {
-            TextField f = new TextField(k.name());
+            TextArea f = new TextArea(k.name());
             fieldMap.put(k, f);
             addComponent(f);
         }
