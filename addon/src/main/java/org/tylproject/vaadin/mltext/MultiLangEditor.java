@@ -15,14 +15,17 @@ import java.util.Map;
  */
 public class MultiLangEditor extends FormLayout {
     Map<LangKey, AbstractTextField> fieldMap = new LinkedHashMap<LangKey, AbstractTextField>();
-    MlText source = new MlText();
+    MlText source;
 
-    public MultiLangEditor() {
+    public MultiLangEditor(MlText initial) {
+
         for (LangKey k: LangKey.values()) {
             TextArea f = new TextArea(k.name());
             fieldMap.put(k, f);
             addComponent(f);
         }
+
+        setMultiLangText(initial);
 
     }
 
