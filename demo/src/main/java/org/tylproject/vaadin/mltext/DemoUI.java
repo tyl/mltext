@@ -8,6 +8,10 @@ import org.tylproject.data.mongo.common.MlText;
 import org.tylproject.data.mongo.config.TylContext;
 import org.tylproject.vaadin.addon.fields.CombinedField;
 import org.vaadin.spring.VaadinUI;
+
+import java.util.Arrays;
+import java.util.Locale;
+
 import static org.tylproject.data.mongo.common.LangKey.*;
 
 /**
@@ -17,13 +21,26 @@ import static org.tylproject.data.mongo.common.LangKey.*;
 @Theme("valo")
 public class DemoUI extends UI {
 
-    final LangKey currentLanguage = en;
+//    final LangKey currentLanguage = en;
 
     @Override
     protected void init(VaadinRequest request) {
 
+        final LanguagePicker languagePicker = new LanguagePicker(Arrays.asList(LangKey.values()));
+
         final MlText mlText1 = makeText();
         final MlText mlText2 = makeText();
+
+        Locale current = UI.getCurrent().getLocale();
+
+
+        LangKey currentLanguage;
+        try {
+            currentLanguage = LangKey.valueOf(current.toLanguageTag());
+        } catch (IllegalArgumentException ex) {
+            currentLanguage = it;
+        }
+
 
         final MultiLangTextField multiLangTextField = new MultiLangTextField(currentLanguage);
         multiLangTextField.setValue(mlText1);
@@ -33,7 +50,7 @@ public class DemoUI extends UI {
 
 
 
-        VerticalLayout vl = new VerticalLayout(multiLangTextField, multiLangTextArea);
+        VerticalLayout vl = new VerticalLayout(languagePicker, multiLangTextField, multiLangTextArea);
         vl.setMargin(true);
         setContent(vl);
 
