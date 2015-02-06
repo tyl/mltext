@@ -11,4 +11,8 @@ public class MultiLangTextArea extends AbstractMultiLangTextField<TextArea> {
     public MultiLangTextArea(LangKey currentLanguage) {
         super(new TextArea(), currentLanguage);
     }
+    public MultiLangTextArea(LangKey currentLanguage, String caption) {
+        this(currentLanguage);
+        this.setCaption(caption);
+    }
 }

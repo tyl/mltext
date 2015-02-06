@@ -31,7 +31,9 @@ public class MultiLangWindow extends Window {
     public void close() {
         super.close();
         MlText value = multiLangEditor.getMlText();
-        this.owner.setValue(value);
+        if (!multiLangEditor.isReadOnly()) {
+            this.owner.setValue(value);
+        }
     }
 
     public MultiLangEditor getEditor() {

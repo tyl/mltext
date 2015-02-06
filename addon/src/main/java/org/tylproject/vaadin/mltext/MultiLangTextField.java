@@ -10,4 +10,8 @@ public class MultiLangTextField extends AbstractMultiLangTextField<TextField> {
     public MultiLangTextField(LangKey currentLanguage) {
         super(new TextField(), currentLanguage);
     }
+    public MultiLangTextField(LangKey currentLanguage, String caption) {
+        this(currentLanguage);
+        this.setCaption(caption);
+    }
 }

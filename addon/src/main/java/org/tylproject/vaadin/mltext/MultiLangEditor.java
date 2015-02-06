@@ -45,6 +45,14 @@ public class MultiLangEditor extends FormLayout {
     }
 
     @Override
+    public void setReadOnly(boolean readOnly) {
+        super.setReadOnly(readOnly);
+        for (AbstractTextField f : fieldMap.values()) {
+            f.setReadOnly(readOnly);
+        }
+    }
+
+    @Override
     public void focus() {
         super.focus();
         Iterator<AbstractTextField> iter = fieldMap.values().iterator();
