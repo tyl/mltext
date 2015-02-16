@@ -37,7 +37,7 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
         getButton().addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                multiLangEditor.setReadOnly(false);
+                multiLangWindow.setReadOnly(false);
                 multiLangWindow.getEditor().setMultiLangText(getValue());
                 multiLangWindow.setReadOnly(isReadOnly());
                 UI.getCurrent().addWindow(multiLangWindow);
@@ -99,6 +99,15 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
         super.setReadOnly(readOnly);
         multiLangEditor.setReadOnly(readOnly);
     }
+
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        // the button is always enabled
+        getButton().setEnabled(true);
+    }
+
 
     @Override
     public MlText getValue() {

@@ -36,6 +36,12 @@ public class MultiLangWindow extends Window {
         }
     }
 
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        super.setReadOnly(readOnly);
+        multiLangEditor.setReadOnly(readOnly);
+    }
+
     public MultiLangEditor getEditor() {
         return multiLangEditor;
     }
