@@ -7,10 +7,10 @@ import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import javafx.scene.text.Font;
 import org.tylproject.data.mongo.common.LangKey;
 import org.tylproject.data.mongo.common.MlText;
 import org.tylproject.data.mongo.config.Context;
-import org.tylproject.data.mongo.config.TylContext;
 import org.tylproject.vaadin.addon.fields.CombinedField;
 
 import javax.annotation.Nonnull;
@@ -22,14 +22,14 @@ import javax.annotation.Nullable;
 public abstract class AbstractMultiLangTextField<F extends AbstractTextField> extends CombinedField<MlText, String, F> {
 
 
-    final LangKey currentLanguage;
+//    final LangKey currentLanguage;
     final Context tylContext;
     final MultiLangEditor multiLangEditor;
 
     public AbstractMultiLangTextField(final F textField, final Context tylContext) {
         super(textField, new Button(FontAwesome.FLAG), MlText.class);
         this.tylContext = tylContext;
-        this.currentLanguage = tylContext.currentLanguage();
+//        this.currentLanguage = tylContext.currentLanguage();
         this.multiLangEditor = new MultiLangEditor(makeMlText());
 
         final MultiLangWindow multiLangWindow = new MultiLangWindow(multiLangEditor, this);
@@ -38,7 +38,9 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 multiLangWindow.setReadOnly(false);
-                multiLangWindow.getEditor().setMultiLangText(getValue());
+                MlText mlText = getValue();
+                mlText.setTylContext(tylContext);
+                multiLangWindow.getEditor().setMultiLangText(mlText);
                 multiLangWindow.setReadOnly(isReadOnly());
                 UI.getCurrent().addWindow(multiLangWindow);
                 multiLangWindow.getEditor().focus();
@@ -62,7 +64,22 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
         super.setValue(value);
 
 
+        setDisplayValue(value);
+    }
+
+    private void setDisplayValue(MlText value) {
+        final LangKey currentLanguage = tylContext.currentLanguage();
+
         getBackingField().setValue(value.getText(currentLanguage));
+        if (isEmpty(value.getText(currentLanguage))) {
+            getButton().setIcon(FontAwesome.FLAG_O);
+        } else {
+            getButton().setIcon(FontAwesome.FLAG);
+        }
+    }
+
+    private boolean isEmpty(String string) {
+        return string == null || string.isEmpty();
     }
 
     @Override
@@ -90,7 +107,7 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
 
         boolean isReadOnly = getBackingField().isReadOnly();
         this.getBackingField().setReadOnly(false);
-        this.getBackingField().setValue(mlText.getText(currentLanguage));
+        setDisplayValue(mlText);
         this.getBackingField().setReadOnly(isReadOnly);
     }
 
@@ -119,7 +136,7 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
         }
 
 
-        mlt.setText(this.currentLanguage, text);
+        mlt.setText(tylContext.currentLanguage(), text);
         return mlt;
     }
 

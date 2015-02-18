@@ -5,6 +5,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
 import org.tylproject.data.mongo.common.LangKey;
 import org.tylproject.data.mongo.common.MlText;
+import org.tylproject.data.mongo.config.Context;
+import org.tylproject.data.mongo.config.ThreadSafeContext;
 import org.tylproject.data.mongo.config.TylContext;
 import org.tylproject.vaadin.addon.fields.CombinedField;
 import org.vaadin.spring.VaadinUI;
@@ -21,7 +23,7 @@ import static org.tylproject.data.mongo.common.LangKey.*;
 @Theme("valo")
 public class DemoUI extends UI {
 
-//    final LangKey currentLanguage = en;
+    Context ctx = new ThreadSafeContext();
 
     @Override
     protected void init(VaadinRequest request) {
@@ -42,10 +44,10 @@ public class DemoUI extends UI {
         }
 
 
-        final MultiLangTextField multiLangTextField = new MultiLangTextField(currentLanguage);
+        final MultiLangTextField multiLangTextField = new MultiLangTextField(ctx);
         multiLangTextField.setValue(mlText1);
 
-        final MultiLangTextArea multiLangTextArea = new MultiLangTextArea(currentLanguage);
+        final MultiLangTextArea multiLangTextArea = new MultiLangTextArea(ctx);
         multiLangTextArea.setValue(mlText2);
 
 
