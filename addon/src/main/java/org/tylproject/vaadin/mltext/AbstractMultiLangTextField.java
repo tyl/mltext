@@ -11,6 +11,7 @@ import javafx.scene.text.Font;
 import org.tylproject.data.mongo.common.LangKey;
 import org.tylproject.data.mongo.common.MlText;
 import org.tylproject.data.mongo.config.Context;
+import org.tylproject.data.mongo.helpers.MlTextHelper;
 import org.tylproject.vaadin.addon.fields.CombinedField;
 
 import javax.annotation.Nonnull;
@@ -26,6 +27,9 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
     final Context tylContext;
     final MultiLangEditor multiLangEditor;
 
+    MlTextHelper mlTextHelper;
+
+
     public AbstractMultiLangTextField(final F textField, final Context tylContext) {
         super(textField, new Button(FontAwesome.FLAG), MlText.class);
         this.tylContext = tylContext;
@@ -39,7 +43,6 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
             public void buttonClick(Button.ClickEvent event) {
                 multiLangWindow.setReadOnly(false);
                 MlText mlText = getValue();
-                mlText.setTylContext(tylContext);
                 multiLangWindow.getEditor().setMultiLangText(mlText);
                 multiLangWindow.setReadOnly(isReadOnly());
                 UI.getCurrent().addWindow(multiLangWindow);
@@ -50,9 +53,13 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
         getBackingField().addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(Property.ValueChangeEvent event) {
-                AbstractMultiLangTextField.super.getValue().setText(tylContext.currentLanguage(), (String) event.getProperty().getValue());
+                getMlTextHelper().setCurrentText((String) event.getProperty().getValue());
             }
         });
+    }
+
+    public MlTextHelper getMlTextHelper() {
+        return mlTextHelper;
     }
 
     @Override
@@ -61,16 +68,21 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
         if (newValue == null) {
             value = makeMlText();
         }
-        super.setValue(value);
-
-
+        setSuperValue(value);
         setDisplayValue(value);
     }
 
-    private void setDisplayValue(MlText value) {
-        final LangKey currentLanguage = tylContext.currentLanguage();
+    public void setSuperValue(MlText value) {
+        super.setValue(value);
+        mlTextHelper = MlTextHelper.of(value);
+        mlTextHelper.setTylContext(tylContext);
+    }
 
-        getBackingField().setValue(value.getText(currentLanguage));
+    private void setDisplayValue(MlText value) {
+
+        getBackingField().setValue(mlTextHelper.getCurrentText());
+
+        final LangKey currentLanguage = tylContext.currentLanguage();
         if (isEmpty(value.getText(currentLanguage))) {
             getButton().setIcon(FontAwesome.FLAG_O);
         } else {
@@ -103,7 +115,7 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
             }
         }
 
-        super.setValue(mlText);
+        setSuperValue(mlText);
 
         boolean isReadOnly = getBackingField().isReadOnly();
         this.getBackingField().setReadOnly(false);
@@ -141,6 +153,6 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
     }
 
     private MlText makeMlText() {
-        return new MlText(tylContext);
+        return new MlText();
     }
 }
