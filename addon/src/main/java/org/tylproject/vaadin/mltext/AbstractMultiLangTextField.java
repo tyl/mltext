@@ -74,7 +74,7 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
 
     public void setSuperValue(MlText value) {
         super.setValue(value);
-        mlTextHelper = MlTextHelper.of(value);
+        mlTextHelper = new MlTextHelper(value);
         mlTextHelper.setTylContext(tylContext);
     }
 
