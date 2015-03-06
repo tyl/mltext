@@ -3,7 +3,7 @@ package org.tylproject.vaadin.mltext;
 import java.util.Locale;
 
 /**
- * Created by evacchi on 05/02/15.
+ * Interface for an object that is able to resolve the currently selected locale
  */
 public interface LanguageContextResolver {
     Locale getCurrentLanguageLocale();

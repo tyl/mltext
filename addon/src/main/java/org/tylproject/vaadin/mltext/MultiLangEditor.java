@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by evacchi on 30/01/15.
+ * An editor for multilang inputs; displays all the available lang strings
  */
 public class MultiLangEditor extends FormLayout {
     Map<LangKey, AbstractTextField> fieldMap = new LinkedHashMap<LangKey, AbstractTextField>();

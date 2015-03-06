@@ -17,12 +17,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Created by evacchi on 30/01/15.
+ * A textfield for multilanguage
  */
 public abstract class AbstractMultiLangTextField<F extends AbstractTextField> extends CombinedField<MlText, String, F> {
 
-
-//    final LangKey currentLanguage;
     final Context tylContext;
     final MultiLangEditor multiLangEditor;
 
@@ -32,7 +30,6 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
     public AbstractMultiLangTextField(final F textField, final Context tylContext) {
         super(textField, new Button(FontAwesome.FLAG), MlText.class);
         this.tylContext = tylContext;
-//        this.currentLanguage = tylContext.currentLanguage();
         this.multiLangEditor = new MultiLangEditor(makeMlText());
 
         final MultiLangWindow multiLangWindow = new MultiLangWindow(multiLangEditor, this);

@@ -5,7 +5,7 @@ import com.vaadin.ui.Window;
 import org.tylproject.data.mongo.common.MlText;
 
 /**
- * Created by evacchi on 30/01/15.
+ * A window to display a multilang editor
  */
 public class MultiLangWindow extends Window {
     final MultiLangEditor multiLangEditor;
@@ -15,7 +15,6 @@ public class MultiLangWindow extends Window {
         this.multiLangEditor = multiLangEditor;
         this.owner = owner;
         setContent(multiLangEditor);
-//        center();
         setModal(true);
         setResizable(false);
         setCloseShortcut(ShortcutAction.KeyCode.ESCAPE);

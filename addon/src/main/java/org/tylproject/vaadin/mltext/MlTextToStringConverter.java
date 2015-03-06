@@ -7,7 +7,7 @@ import org.tylproject.data.mongo.common.MlText;
 import java.util.Locale;
 
 /**
- * Created by evacchi on 30/01/15.
+ * Converts an MlText to the current locale string
  */
 public class MlTextToStringConverter implements Converter<String, MlText> {
     @Override

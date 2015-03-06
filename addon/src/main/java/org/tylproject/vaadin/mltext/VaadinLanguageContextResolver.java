@@ -5,7 +5,9 @@ import com.vaadin.server.VaadinSession;
 import java.util.Locale;
 
 /**
- * Created by evacchi on 05/02/15.
+ * A language resolver that uses Vaadin's Sessione
+ *
+ * @see com.vaadin.server.VaadinSession
  */
 public class VaadinLanguageContextResolver implements LanguageContextResolver {
     @Override

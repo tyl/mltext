@@ -8,7 +8,7 @@ import org.tylproject.data.mongo.common.LangKey;
 import java.util.*;
 
 /**
- * Created by evacchi on 05/02/15.
+ * A ComboBox for picking from a collection of given languages
  */
 public class LanguagePicker extends ComboBox {
 
@@ -38,8 +38,12 @@ public class LanguagePicker extends ComboBox {
         @Override
         public void valueChange(Property.ValueChangeEvent event) {
             Locale selected = (Locale) event.getProperty().getValue();
+
+            // both the following 2 lines are needed due to a Vaadin's known bug
             UI.getCurrent().setLocale(selected);
             UI.getCurrent().getSession().setLocale(selected);
+
+            // redirect to home
             UI.getCurrent().getPage().setLocation("");
         }
     }
