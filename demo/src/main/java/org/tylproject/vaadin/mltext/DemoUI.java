@@ -5,6 +5,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
 import org.tylproject.data.mongo.common.LangKey;
 import org.tylproject.data.mongo.common.MlText;
+import org.tylproject.data.mongo.common.Signature;
 import org.tylproject.data.mongo.config.Context;
 import org.tylproject.data.mongo.config.ThreadSafeContext;
 import org.tylproject.data.mongo.config.TylContext;
@@ -23,7 +24,48 @@ import static org.tylproject.data.mongo.common.LangKey.*;
 @Theme("valo")
 public class DemoUI extends UI {
 
-    Context ctx = new ThreadSafeContext();
+    Context ctx = new Context() {
+
+        LangKey defaultLanguage = LangKey.en;
+
+        @Override
+        public LangKey defaultLanguage() {
+            return defaultLanguage;
+        }
+
+        @Override
+        public void setDefaultLanguage(LangKey language) {
+            this.defaultLanguage = language;
+        }
+
+        @Override
+        public Signature currentUser() {
+            return null;
+        }
+
+        @Override
+        public void setCurrentUser(Signature signature) {
+
+        }
+
+        @Override
+        public LangKey currentLanguage() {
+            final UI currentUI = UI.getCurrent();
+            if (currentUI == null)
+                return defaultLanguage;
+            else {
+                final LangKey selectedLanguage = currentUI.getSession().getAttribute(LangKey.class);
+                return selectedLanguage == null? defaultLanguage : selectedLanguage;
+            }
+        }
+
+        @Override
+        public void setCurrentLanguage(LangKey language) {
+            final UI currentUI = UI.getCurrent();
+            if (currentUI == null) throw new NullPointerException();
+            currentUI.getSession().setAttribute(LangKey.class, language);
+        }
+    };
 
     @Override
     protected void init(VaadinRequest request) {

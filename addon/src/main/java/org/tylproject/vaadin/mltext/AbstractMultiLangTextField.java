@@ -24,13 +24,15 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
     final Context tylContext;
     final MultiLangEditor multiLangEditor;
 
-    MlTextHelper mlTextHelper;
+//    MlTextHelper mlTextHelper;
 
 
     public AbstractMultiLangTextField(final F textField, final Context tylContext) {
         super(textField, new Button(FontAwesome.FLAG), MlText.class);
         this.tylContext = tylContext;
         this.multiLangEditor = new MultiLangEditor(makeMlText());
+        this.setValue(makeMlText());
+        this.getBackingField().setNullRepresentation("");
 
         final MultiLangWindow multiLangWindow = new MultiLangWindow(multiLangEditor, this);
 
@@ -49,13 +51,16 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
         getBackingField().addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(Property.ValueChangeEvent event) {
+            if (!isReadOnly()) {
                 getMlTextHelper().setCurrentText((String) event.getProperty().getValue());
             }
+            }
         });
+
     }
 
     public MlTextHelper getMlTextHelper() {
-        return mlTextHelper;
+        return new MlTextHelper(getValue(), tylContext);
     }
 
     @Override
@@ -64,22 +69,25 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
         if (newValue == null) {
             value = makeMlText();
         }
-        setSuperValue(value);
-        setDisplayValue(value);
-    }
-
-    public void setSuperValue(MlText value) {
         super.setValue(value);
-        mlTextHelper = new MlTextHelper(value);
-        mlTextHelper.setTylContext(tylContext);
+        setDisplayValue(getMlTextHelper());
     }
 
-    private void setDisplayValue(MlText value) {
+    private void setDisplayValue(MlTextHelper value) {
 
-        getBackingField().setValue(mlTextHelper.getCurrentText());
+        F backingField = getBackingField();
+        // !readonly => field is editable
+        if (!isReadOnly() && value.isCurrentTextEmpty()) {
+            backingField.setValue(null);
+        } else {
+            boolean isReadOnly = backingField.isReadOnly();
+            backingField.setReadOnly(false);
+            backingField.setValue(value.getCurrentText());
+            backingField.setReadOnly(isReadOnly);
+        }
 
-        final LangKey currentLanguage = tylContext.currentLanguage();
-        if (isEmpty(value.getText(currentLanguage))) {
+        // display an empty flag on fallback
+        if (value.isCurrentTextEmpty()) {
             getButton().setIcon(FontAwesome.FLAG_O);
         } else {
             getButton().setIcon(FontAwesome.FLAG);
@@ -96,26 +104,27 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
 
         // if newDataSource is null, clear the field
         if (newDataSource == null) {
+            boolean isReadOnly = this.isReadOnly();
             this.setReadOnly(false);
             this.setValue(null);
+            this.setReadOnly(isReadOnly);
             return;
         }
 
         // otherwise, getValue()
         MlText mlText = null;
-        if (newDataSource != null) {
-            mlText = (MlText) newDataSource.getValue();
-            if (mlText == null) {
-                mlText = makeMlText();
-                newDataSource.setValue(mlText);
-            }
+        mlText = (MlText) newDataSource.getValue();
+        if (mlText == null) {
+            mlText = makeMlText();
+            newDataSource.setValue(mlText);
         }
 
-        setSuperValue(mlText);
+        super.setValue(mlText);
 
+        // set display value
         boolean isReadOnly = getBackingField().isReadOnly();
         this.getBackingField().setReadOnly(false);
-        setDisplayValue(mlText);
+        setDisplayValue(new MlTextHelper(mlText, tylContext));
         this.getBackingField().setReadOnly(isReadOnly);
     }
 
@@ -123,6 +132,10 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
     public void setReadOnly(boolean readOnly) {
         super.setReadOnly(readOnly);
         multiLangEditor.setReadOnly(readOnly);
+
+        // refresh display value
+        setDisplayValue(this.getMlTextHelper());
+
     }
 
 
@@ -133,20 +146,19 @@ public abstract class AbstractMultiLangTextField<F extends AbstractTextField> ex
         getButton().setEnabled(true);
     }
 
-
-    @Override
-    public MlText getValue() {
-        String text = getBackingField().getValue();
-        MlText mlt = super.getValue();
-
-        if (mlt == null) {
-            mlt = makeMlText();
-        }
-
-
-        mlt.setText(tylContext.currentLanguage(), text);
-        return mlt;
-    }
+//
+//    @Override
+//    public MlText getValue() {
+//        String text = getBackingField().getValue();
+//        MlText mlt = super.getValue();
+//
+////        if (mlt == null) {
+////            mlt = makeMlText();
+////        }
+//
+////        mlt.setText(tylContext.currentLanguage(), text);
+//        return mlt;
+//    }
 
     private MlText makeMlText() {
         return new MlText();

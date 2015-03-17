@@ -9,11 +9,11 @@ import org.tylproject.data.mongo.common.MlText;
  */
 public class MultiLangWindow extends Window {
     final MultiLangEditor multiLangEditor;
-    final AbstractMultiLangTextField owner;
+    final AbstractMultiLangTextField owningField;
 
-    public MultiLangWindow(MultiLangEditor multiLangEditor, AbstractMultiLangTextField owner) {
+    public MultiLangWindow(MultiLangEditor multiLangEditor, AbstractMultiLangTextField owningField) {
         this.multiLangEditor = multiLangEditor;
-        this.owner = owner;
+        this.owningField = owningField;
         setContent(multiLangEditor);
         setModal(true);
         setResizable(false);
@@ -31,7 +31,7 @@ public class MultiLangWindow extends Window {
         super.close();
         MlText value = multiLangEditor.getMlText();
         if (!multiLangEditor.isReadOnly()) {
-            this.owner.setValue(value);
+            this.owningField.setValue(value);
         }
     }
 
